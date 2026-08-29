@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { BuyButton } from "./buy-button"
 import { hasEnvVars } from "@/lib/utils";
-import { EnvVarWarning } from "@/components/env-var-warning";
+import { EnvVarWarning } from "@/components/Login/env-var-warning";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button"
 import Link from "next/link"

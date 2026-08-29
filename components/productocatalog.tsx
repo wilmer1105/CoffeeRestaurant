@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/pagination"
 
 // Componente principal exportado
-export function ProductCatalog() {
+export function ProductCatalog({ categoriaFiltro = "Todas" }: { categoriaFiltro?: string }){
   const [productos, setProductos] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   
@@ -30,9 +30,18 @@ export function ProductCatalog() {
       const from = (currentPage - 1) * ITEMS_PER_PAGE
       const to = from + ITEMS_PER_PAGE - 1
 
-      const { data, count, error } = await supabase
+      // 2. Preparamos la consulta base
+      let query = supabase
         .from('productos')
         .select('*', { count: 'exact' })
+
+      // 3. Si hay una categoría seleccionada (y no es "Todas"), aplicamos el filtro
+      if (categoriaFiltro !== "Todas") {
+        query = query.eq('categoria', categoriaFiltro)
+      }
+
+      // 4. Agregamos paginación y orden al final
+      const { data, count, error } = await query
         .range(from, to)
         .order('id', { ascending: true })
 
@@ -46,7 +55,7 @@ export function ProductCatalog() {
     }
 
     fetchProductos()
-  }, [currentPage, supabase])
+  }, [currentPage, categoriaFiltro, supabase])
 
   const handlePageChange = (page: number, e: React.MouseEvent) => {
     e.preventDefault()
